@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Button } from "../components/Button";
 import { Companion } from "../components/Companion";
 import { ProgressBar } from "../components/ProgressBar";
+import { companionCatalog } from "../data/companion";
 import type { CompanionState } from "../data/companion";
 
 interface NextGoalScreenProps {
@@ -16,13 +17,8 @@ const upcomingMilestones = [
   { xp: 240, label: "Final evolution unlocked" },
 ];
 
-const fadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 14 },
-  animate: { opacity: 1, y: 0 },
-  transition: { delay, duration: 0.4, ease: [0.22, 1, 0.36, 1] },
-});
-
 export function NextGoalScreen({ companion, onRestart }: NextGoalScreenProps) {
+  const def = companionCatalog[companion.id];
   const nextMilestone = upcomingMilestones[0];
   const xpToNext = nextMilestone.xp - companion.xp;
 
@@ -30,32 +26,44 @@ export function NextGoalScreen({ companion, onRestart }: NextGoalScreenProps) {
     <div className="flex h-full flex-col gap-4">
       <div className="scrollbar-hide min-h-0 flex-1 overflow-y-auto">
         {/* Header */}
-        <motion.div {...fadeUp(0.05)} className="text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05, duration: 0.4 }}
+          className="text-center"
+        >
           <span className="inline-flex items-center gap-1.5 rounded-full bg-[#E8F7EE] px-3 py-1.5 text-xs font-bold text-[#237A48]">
             <Star size={12} fill="currentColor" />
             Journey continues
           </span>
           <h1 className="mt-3 text-3xl font-bold tracking-tight text-[#171717]">
-            What's next for Nova
+            What's next for {def.name}
           </h1>
           <p className="mt-2 text-sm leading-relaxed text-black/45">
-            Nova has more to discover. Keep learning to unlock new forms.
+            {def.name} has more to discover. Keep learning to unlock new forms.
           </p>
         </motion.div>
 
         {/* Companion */}
-        <motion.div {...fadeUp(0.12)} className="mt-5 flex justify-center">
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.12, duration: 0.4 }}
+          className="mt-5 flex justify-center"
+        >
           <motion.div
             animate={{ y: [0, -5, 0] }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
           >
-            <Companion stage={companion.stage} size="md" animate={false} />
+            <Companion stage={companion.stage} companionId={companion.id} size="md" animate={false} />
           </motion.div>
         </motion.div>
 
         {/* Current XP */}
         <motion.div
-          {...fadeUp(0.2)}
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.4 }}
           className="mt-5 rounded-[24px] bg-white p-5 shadow-sm ring-1 ring-black/[0.05]"
         >
           <div className="flex items-center justify-between">
@@ -73,14 +81,19 @@ export function NextGoalScreen({ companion, onRestart }: NextGoalScreenProps) {
               <span className="text-xs font-bold text-[#7A5A00]">{xpToNext} to next</span>
             </div>
           </div>
-          <ProgressBar value={companion.xp} max={240} className="mt-4" />
+          <ProgressBar value={companion.xp} max={240} className="mt-4" color={def.color} />
           <p className="mt-2 text-sm text-black/45">
             Next: {nextMilestone.label}
           </p>
         </motion.div>
 
         {/* Upcoming milestones */}
-        <motion.div {...fadeUp(0.3)} className="mt-4">
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.4 }}
+          className="mt-4"
+        >
           <p className="mb-3 text-xs font-bold uppercase tracking-[0.12em] text-black/35">
             Upcoming milestones
           </p>
@@ -93,10 +106,13 @@ export function NextGoalScreen({ companion, onRestart }: NextGoalScreenProps) {
                 transition={{ delay: 0.4 + i * 0.08 }}
                 className="flex items-center gap-3 rounded-2xl bg-white px-4 py-3.5 shadow-sm ring-1 ring-black/[0.05]"
               >
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#F3F0FF]">
-                  <BookOpen size={14} className="text-[#5B4BDB]" />
+                <div
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
+                  style={{ backgroundColor: def.colorBg }}
+                >
+                  <BookOpen size={14} style={{ color: def.color }} />
                 </div>
-                <div className="flex-1 min-w-0">
+                <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-semibold text-[#171717]">
                     {m.label}
                   </p>
@@ -110,7 +126,7 @@ export function NextGoalScreen({ companion, onRestart }: NextGoalScreenProps) {
         </motion.div>
       </div>
 
-      {/* Button always pinned at bottom, never buried */}
+      {/* Button pinned at bottom */}
       <motion.div
         initial={{ opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
