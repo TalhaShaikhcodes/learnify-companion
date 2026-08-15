@@ -15,11 +15,19 @@ export type CompanionDefinition = {
   id: CompanionId;
   name: string;
   trait: string;
-  color: string;       // primary accent for selection ring / bg
-  colorBg: string;     // light tint background
+  color: string;
+  colorBg: string;
   stages: Record<GrowthStage, { form: string; image: string }>;
   abilities: Record<GrowthStage, { name: string; description: string }>;
 };
+
+// Vite replaces import.meta.env.BASE_URL at build time:
+//   dev  → "/"
+//   prod → "/learnify-companion/"
+// This ensures image paths resolve correctly on GitHub Pages.
+const base = import.meta.env.BASE_URL.replace(/\/$/, ""); // strip trailing slash
+
+const img = (path: string) => `${base}${path}`;
 
 export const companionCatalog: Record<CompanionId, CompanionDefinition> = {
   nova: {
@@ -29,9 +37,9 @@ export const companionCatalog: Record<CompanionId, CompanionDefinition> = {
     color: "#5B4BDB",
     colorBg: "#F3F0FF",
     stages: {
-      1: { form: "Hatchling",      image: "/companions/nova-stage-1.png" },
-      2: { form: "Growing",        image: "/companions/nova-stage-2.png" },
-      3: { form: "Evolved",        image: "/companions/nova-stage-3.png" },
+      1: { form: "Hatchling", image: img("/companions/nova-stage-1.png") },
+      2: { form: "Growing",   image: img("/companions/nova-stage-2.png") },
+      3: { form: "Evolved",   image: img("/companions/nova-stage-3.png") },
     },
     abilities: {
       1: { name: "✦ Spark",     description: "Nova glows with curiosity, ready to learn." },
@@ -46,11 +54,9 @@ export const companionCatalog: Record<CompanionId, CompanionDefinition> = {
     color: "#D4520A",
     colorBg: "#FFF4EC",
     stages: {
-      // Only stage-1 artwork exists; reuse it for all stages.
-      // Visual growth is communicated through scale in the Companion component.
-      1: { form: "Spark",   image: "/companions/ember-stage-1.png" },
-      2: { form: "Flame",   image: "/companions/ember-stage-1.png" },
-      3: { form: "Inferno", image: "/companions/ember-stage-1.png" },
+      1: { form: "Spark",   image: img("/companions/ember-stage-1.png") },
+      2: { form: "Flame",   image: img("/companions/ember-stage-1.png") },
+      3: { form: "Inferno", image: img("/companions/ember-stage-1.png") },
     },
     abilities: {
       1: { name: "✦ Ignite",   description: "Ember blazes forward with bold determination." },
@@ -65,10 +71,9 @@ export const companionCatalog: Record<CompanionId, CompanionDefinition> = {
     color: "#2A7A4B",
     colorBg: "#E8F7EE",
     stages: {
-      // Only stage-1 artwork exists; reuse it for all stages.
-      1: { form: "Seedling",  image: "/companions/moss-stage-1.png" },
-      2: { form: "Sprouting", image: "/companions/moss-stage-1.png" },
-      3: { form: "Blooming",  image: "/companions/moss-stage-1.png" },
+      1: { form: "Seedling",  image: img("/companions/moss-stage-1.png") },
+      2: { form: "Sprouting", image: img("/companions/moss-stage-1.png") },
+      3: { form: "Blooming",  image: img("/companions/moss-stage-1.png") },
     },
     abilities: {
       1: { name: "✦ Sprout",  description: "Moss roots quietly, ready to grow." },
